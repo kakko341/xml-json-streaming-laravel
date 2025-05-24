@@ -24,10 +24,10 @@ However, naive appending led to very slow processing, so a buffer mechanism was 
 
 ## Articles
 
-- [Part 1: Building the XMLReader API](./xmlreader-api-basics.md)  
+- [Part 1: Building the XMLReader API](./articles/streaming-xml-to-json-with-xmlreader.md)  
   Covers the use of `XMLReader`, basic API design, unit testing, and streaming to S3.
 
-- [Part 2: Memory Optimization via Streaming and Buffering](./memory-optimized-json-writing-with-buffering.md)  
+- [Part 2: Memory Optimization via Streaming and Buffering](./articles/memory-optimized-json-writing-with-buffering.md)  
   Details performance tuning using buffered JSON streaming and custom append methods.
 
 ## Additional Notes
