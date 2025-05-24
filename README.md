@@ -1,30 +1,40 @@
-# XML to JSON Streaming in Laravel
+# XML to JSON Streaming API in Laravel
 
-This repository explores memory-efficient techniques for converting large XML files into JSON format using streaming and buffering strategies in Laravel.
+This project demonstrates an API built with Laravel that reads large XML files, extracts necessary elements, and converts them into JSON format efficiently.
+
+## Overview
+
+Initially, we developed an API using Laravel to parse XML files and return only the required elements in JSON. Originally, SimpleXML was considered, but due to heavy memory consumption with large files, we switched to using `XMLReader`, which allows streaming XML parsing with minimal memory overhead.
 
 ## Features
 
-- Memory-optimized JSON writing using string `append()`
-- Custom buffer flushing mechanism to reduce memory spikes
-- Practical example of Laravel-style file handling
-- Insight into performance trade-offs and optimization decisions
+- **XMLReader Usage**  
+  Utilizes PHP's `XMLReader` for memory-efficient XML parsing.  
+- **Unit Testing**  
+  Includes tests verifying output JSON content correctness and file creation.  
+- **Handling Large Files**  
+  Implements streaming upload to S3 using Laravel's `readStream` and buffered writing to reduce memory usage during JSON generation.
+
+## Performance Optimization
+
+During testing, we observed excessive memory usage while accumulating parsed data before JSON encoding. To address this, we replaced array accumulation with a streaming approach that appends JSON strings gradually to a file. 
+
+However, naive appending led to very slow processing, so a buffer mechanism was introduced: data is accumulated in memory up to a configurable buffer size (default 1MB), then flushed to disk, greatly improving memory consumption without a significant performance penalty.
+
 
 ## Articles
 
-This repository includes two markdown articles:
+- [Part 1: Building the XMLReader API](./xmlreader-api-basics.md)  
+  Covers the use of `XMLReader`, basic API design, unit testing, and streaming to S3.
 
-1. **[Switching to Append Method](articles/memory-optimized-json-writing-with-buffering.md)**  
-   Replacing arrays with string-based appending to reduce memory usage.
+- [Part 2: Memory Optimization via Streaming and Buffering](./memory-optimized-json-writing-with-buffering.md)  
+  Details performance tuning using buffered JSON streaming and custom append methods.
 
-2. **[Adding Buffered Output](articles/memory-optimized-json-writing-with-buffering.md)**  
-   Using a 1MB buffer to periodically flush content and avoid long delays.
+## Additional Notes
 
-Both sections are combined into one file for easier access.
-
-## Usage
-
-The approach described is especially helpful when dealing with large XML files and trying to avoid PHP memory limit issues. Instead of collecting all data into an array and `json_encode` at once, it streams and appends JSON fragments directly to a file.
+- The append method implemented here is customized to avoid Laravel's built-in append method, which retains data in memory and is less efficient for large streams.  
+- The streaming upload to S3 requires proper handling of file pointers and stream closing to avoid file locking issues.
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the MIT License.
